@@ -1,0 +1,24 @@
+.NodeController {
+  padding: 16px;
+  width: 400px;
+  position: absolute;
+  top: 0;
+  left: 0;
+  background-color: white;
+  user-select: none;
+
+  &__point-info {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    &__point {
+      font-size: 16px;
+      font-weight: bold;
+    }
+  }
+
+  &__color-input {
+    width: 100% !important;
+  }
+}
