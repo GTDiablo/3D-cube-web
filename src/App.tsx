@@ -5,9 +5,12 @@ import CubeSerializer from "./core/serlializers";
 //
 import NodeController from './components/NodeController';
 import EngineWindow from "./components/EngineWindow";
+import UserSurvey from "./components/UserSurvey";
+import Watermark from "./components/Watermark";
 //
 import { useState, useEffect, Fragment, memo } from 'react'
 import io, {Socket, } from 'socket.io-client';
+import {v4 as uuidV4 } from 'uuid'
 //
 import './App.css'
 
@@ -18,9 +21,11 @@ const SOCKET_HOST = window.location.hostname
 const SOCKET_URL = `http://${SOCKET_HOST}:${SOCKET_PORT}`;
 
 const App = () => {
+  const userIdentifier = uuidV4();
   const [currentNode, setCurrentNode] = useState<Node | null>(null);
   const [cube, setCube] = useState<Cube | null>(null);
   const [socket, setSocket] = useState<Socket | null>(null);
+  const [showSurvey, setShowSurvey] = useState<boolean>(true);
 
   // TODO: add front and back indicator in engine
   // TODO: Optimize in model
@@ -69,6 +74,10 @@ const App = () => {
   const loaded = !!socket && !!cube;
 
   const renderComponents = () => {
+    if(showSurvey){
+      return <UserSurvey userIdentifier={userIdentifier} setShowSurvey={setShowSurvey}/>
+    }
+
     if(!loaded){
       return ( <h1 className="loading-modal">Loading...</h1> )
     }
@@ -87,6 +96,7 @@ const App = () => {
   return (
     <div className="App">
       { renderComponents() }
+      <Watermark />
     </div>
   )
 }

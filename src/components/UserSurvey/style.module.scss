@@ -1,0 +1,64 @@
+.UserSurvey {
+  width: 100vw;
+  height: 100vh;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+
+  &__title {
+    margin-bottom: 10px;
+  }
+
+  &__description {
+    margin-bottom: 50px;
+  }
+
+  &__container {
+    margin: 0 auto;
+    width: 100%;
+    max-width: 450px;
+    position: relative;
+    height: 100%;
+    overflow: auto;
+    padding: 60px 0 20px;
+  }
+
+  &__form {
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+
+    > input[type="submit"]{
+      border: none;
+      padding: 20px;
+      background-color: lightcoral;
+      color: white;
+      font-size: 20px;
+      border-radius: 8px;
+      cursor: pointer;
+    }
+  }
+
+  &__input-group {
+    margin-bottom: 25px;
+
+    > label {
+      margin-bottom: 10px;
+    }
+
+    > input {
+      padding: 8px 16px;
+      outline: none;
+      border-radius: 8px;
+      border: 1px solid black;
+    }
+  }
+
+  &__input-group {
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+  }
+}

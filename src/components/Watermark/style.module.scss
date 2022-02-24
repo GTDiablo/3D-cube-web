@@ -1,0 +1,15 @@
+.Watermark {
+  position: fixed;
+  right: 0;
+  bottom: 0;
+  background-color: white;
+  border-top-left-radius: 8px;
+  padding: 8px;
+  user-select: none;
+  cursor: pointer;
+
+  &__text {
+    font-size: 16px;
+    font-weight: bold;
+  }
+}
