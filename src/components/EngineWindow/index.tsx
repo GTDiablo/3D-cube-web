@@ -19,7 +19,7 @@ const EngineWindow: FC<Props> = ({className,cube, setCurrentNode}) => {
     useEffect(()=> {
         if(!!cube){
             const cubeRenderer = new CubeRenderer(canvasElRef.current, cube);
-            cubeRenderer.onNodeClick((node: Node)=> {
+            cubeRenderer.onNodeClick((node: Node | null)=> {
                 setCurrentNode(node);
             })
             cubeRenderer.animate();

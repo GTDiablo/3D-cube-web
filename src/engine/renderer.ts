@@ -4,7 +4,7 @@ import { Node } from '../core/types';
 import * as THREE from 'three'
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls";
 
-type NodeClickCallback = (node: Node) => void;
+type NodeClickCallback = (node: Node| null) => void;
 
 // TODO: Flip cube to right orientation
 class CubeRenderer {
@@ -126,7 +126,7 @@ class CubeRenderer {
         this.callbacks.push(callback);
     }
 
-    publishClick(node: Node): void {
+    publishClick(node: Node | null): void {
         this.callbacks.forEach((callback: NodeClickCallback)=> callback(node));
     }
 

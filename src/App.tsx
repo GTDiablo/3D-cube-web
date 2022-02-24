@@ -7,6 +7,8 @@ import NodeController from './components/NodeController';
 import EngineWindow from "./components/EngineWindow";
 import UserSurvey from "./components/UserSurvey";
 import Watermark from "./components/Watermark";
+import Changes from "./components/Changes";
+import UsedColors from "./components/UsedColors";
 //
 import { useState, useEffect, Fragment, memo } from 'react'
 import io, {Socket, } from 'socket.io-client';
@@ -21,11 +23,27 @@ const SOCKET_HOST = window.location.hostname
 const SOCKET_URL = `http://${SOCKET_HOST}:${SOCKET_PORT}`;
 
 const App = () => {
-  const userIdentifier = uuidV4();
+  const [userIdentifier] = useState<string>(uuidV4);
   const [currentNode, setCurrentNode] = useState<Node | null>(null);
   const [cube, setCube] = useState<Cube | null>(null);
   const [socket, setSocket] = useState<Socket | null>(null);
   const [showSurvey, setShowSurvey] = useState<boolean>(true);
+  const [changes, setChanges] = useState<Node[]>([]);
+  const [usedColors, setUsedColors] = useState<string[]>([]);
+
+  const sendChanges = () => {
+    socket?.emit('cube-change-web', { userIdentifier, changes });
+    setUsedColors(prevState => {
+      const newColors: string[] = changes.map((node: Node)=> node.color).filter((color: string)=> ![...prevState, '#ffffff', '#000000'].includes(color));
+      return [...prevState, ...newColors];
+    });
+    setChanges([]);
+  }
+
+  // TODO: Make Node a class
+  const areNodesEqual = (n1: Node, n2: Node) => {
+    return n1.point.x === n2.point.x && n1.point.y === n2.point.y && n1.point.z === n2.point.z;
+  }
 
   // TODO: add front and back indicator in engine
   // TODO: Optimize in model
@@ -54,7 +72,11 @@ const App = () => {
         const cube: Cube = cubeSerializer.deserialize(cubeSize, rawData);
 
         cube.onChange((node: Node, cube: Cube)=> {
-          newSocket?.emit('cube-change-web', node);
+          // newSocket?.emit('cube-change-web', node);
+          setChanges(prevState => {
+            const newState = prevState.filter((n: Node) => !areNodesEqual(n, node));
+            return [node, ...newState];
+          });
         });
 
         return cube;
@@ -70,6 +92,13 @@ const App = () => {
     }
 
   }, []);
+
+  const onUsedColorClicked = (color: string) => {
+    if(currentNode){
+      cube?.setNode(currentNode.point, color);
+    }
+  }
+
 
   const loaded = !!socket && !!cube;
 
@@ -89,6 +118,8 @@ const App = () => {
               setCurrentNode={setCurrentNode}
           />
           { !!currentNode && <NodeController node={currentNode} setCurrentNodeColor={setCurrentNodeColor} />}
+          { changes.length > 0 && <Changes changes={changes} sendChanges={sendChanges}/>}
+          <UsedColors colors={usedColors} onColorClicked={onUsedColorClicked}/>
         </Fragment>
     )
   }
