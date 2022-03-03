@@ -6,7 +6,6 @@ import { OrbitControls } from "three/examples/jsm/controls/OrbitControls";
 
 type NodeClickCallback = (node: Node| null) => void;
 
-// TODO: Flip cube to right orientation
 class CubeRenderer {
     private readonly scene: THREE.Scene;
     private readonly camera: THREE.PerspectiveCamera;
@@ -28,9 +27,8 @@ class CubeRenderer {
         this.scene = new THREE.Scene();
 
         this.camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
-        this.camera.position.set(cubeSize, cubeSize, cubeSize)
+        this.camera.position.set(0, cubeSize, 10)
         this.camera.lookAt(0, 0, 0);
-        this.camera.position.z = 5;
 
         this.renderer = new THREE.WebGLRenderer({
             canvas: canvasEl as HTMLCanvasElement
@@ -65,7 +63,17 @@ class CubeRenderer {
             this.mesh.setColorAt(index, this.hexColorToThreeJsColor(node.color));
         });
 
+        // Rotate cube
+        this.mesh.rotateZ(3.1415926536)
+        this.mesh.translateY(-2.7);
+
         this.scene.add(this.mesh, gridHelper, light);
+
+        // Render helper arrows
+        const arrowPos = new THREE.Vector3( -5,0,5 );
+        this.scene.add( new THREE.ArrowHelper( new THREE.Vector3( 1,0,0 ), arrowPos, 10, 0x7F2020, 1, 1 ) ); // Red - X
+        this.scene.add( new THREE.ArrowHelper( new THREE.Vector3( 0,1,0 ), arrowPos, 10, 0x207F20, 1, 1 ) ); // Green - Y
+        this.scene.add( new THREE.ArrowHelper( new THREE.Vector3( 0,0,-1 ), arrowPos, 10, 0x20207F, 1, 1 ) ); // Blue - Z
 
         window.addEventListener( 'resize', this.onWindowResize.bind(this) );
         document.addEventListener( 'mousemove', this.onMouseMove.bind(this) );
